@@ -61,4 +61,5 @@ main (int argc, char** argv)
 
     std::cout << "cloud_curvatures->size()" <<cloud_curvatures->size()<< std::endl;
     std::cout << "Normals good" << std::endl;
+    
 }
