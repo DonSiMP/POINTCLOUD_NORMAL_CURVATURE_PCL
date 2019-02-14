@@ -16,7 +16,7 @@ int main(int argc, char** argv)
 {
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
-    if ( pcl::io::loadPCDFile <pcl::PointXYZ> ("test_one.pcd", *cloud) == -1 )
+        if ( pcl::io::loadPCDFile <pcl::PointXYZ> ("filename.pcd", *cloud) == -1 )
     {
         PCL_ERROR("Couldn't read file mypointcloud.pcd\n");
         return -1;
@@ -43,17 +43,29 @@ int main(int argc, char** argv)
     pcl::GreedyProjectionTriangulation<pcl::PointNormal> gp3;
     pcl::PolygonMesh triangles;
 
-    gp3.setSearchRadius(10000.0f);
-    gp3.setMu(10000.0f);
-    gp3.setMaximumNearestNeighbors(100);
-    gp3.setMaximumSurfaceAngle(M_PI / 2);
-    gp3.setMinimumAngle(M_PI / 18);
-    gp3.setMaximumAngle(2 * M_PI / 1);
+    gp3.setSearchRadius(10000000);
+    gp3.setMu(10000000);
+    gp3.setMaximumNearestNeighbors(165);
+    gp3.setMaximumSurfaceAngle(M_PI / 4);
+    gp3.setMinimumAngle(M_PI / 180);
+    gp3.setMaximumAngle(2 * M_PI);
     gp3.setNormalConsistency(false);
     gp3.setInputCloud(cloud_with_normals);
     gp3.setSearchMethod(tree2);
     gp3.reconstruct(triangles);
     std::cerr << "triangles ok" << std::endl;
+
+//    gp3.setSearchRadius(200);
+//    gp3.setMu(200);
+//    gp3.setMaximumNearestNeighbors(165);
+//    gp3.setMaximumSurfaceAngle(M_PI);
+//    gp3.setMinimumAngle(M_PI / 18);
+//    gp3.setMaximumAngle(2 * M_PI);
+//    gp3.setNormalConsistency(false);
+//    gp3.setInputCloud(cloud_with_normals);
+//    gp3.setSearchMethod(tree2);
+//    gp3.reconstruct(triangles);
+//    std::cerr << "triangles ok" << std::endl;
 
     pcl::io::saveVTKFile("mymesh.vtk", triangles);
     std::vector<int> parts = gp3.getPartIDs();
@@ -77,11 +89,11 @@ int main(int argc, char** argv)
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer(new pcl::visualization::PCLVisualizer("3D Viewer"));
     viewer->setBackgroundColor(0.4,0.4,0.88);
     viewer->addPolygonMesh(triangles, "my");
-//    viewer->setRepresentationToSurfaceForAllActors(); //panel
+    viewer->setRepresentationToSurfaceForAllActors(); //panel
 //    viewer->setRepresentationToPointsForAllActors(); //cloud
 //    viewer->addPointCloud<pcl::PointXYZ>(cloud, "cloud");
 //    viewer->addPointCloudNormals<pcl::PointXYZ, pcl::Normal>(cloud, normals, 1, 0.03, "normals");//normals
-    viewer->setRepresentationToWireframeForAllActors();  //line
+//    viewer->setRepresentationToWireframeForAllActors();  //line
     viewer->addCoordinateSystem(10.0);
     viewer->initCameraParameters();
 
